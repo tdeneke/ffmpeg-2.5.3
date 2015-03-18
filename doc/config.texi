@@ -389,7 +389,7 @@
 @c @set config-libopenjpeg no
 @c @set config-libopus no
 @set config-liborcc264 yes
-@set config-liborcc265 yes
+@c @set config-liborcc265 no
 @c @set config-libpulse no
 @c @set config-libquvi no
 @c @set config-librtmp no
@@ -939,7 +939,7 @@
 @c @set config-libopenjpeg-decoder no
 @c @set config-libopus-decoder no
 @set config-liborcc264-decoder yes
-@set config-liborcc265-decoder yes
+@c @set config-liborcc265-decoder no
 @c @set config-libschroedinger-decoder no
 @c @set config-libspeex-decoder no
 @c @set config-libstagefright-h264-decoder no

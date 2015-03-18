@@ -24,6 +24,7 @@ EXAMPLES=       avio_reading                       \
                 scaling_video                      \
                 transcode_aac                      \
                 transcoding                        \
+                transcoding_2                      \
 
 OBJS=$(addsuffix .o,$(EXAMPLES))
 
