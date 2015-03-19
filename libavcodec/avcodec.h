@@ -3123,6 +3123,12 @@ typedef struct AVCodecContext {
      * - decoding: set by user through AVOPtions (NO direct access)
      */
     char *codec_whitelist;
+    /**
+     *Addded for dataflow component, will look another methos as well  
+     *	
+     */
+    char *dataflow_ncores;
+    char *dataflow_input_fname;
 } AVCodecContext;
 
 AVRational av_codec_get_pkt_timebase         (const AVCodecContext *avctx);

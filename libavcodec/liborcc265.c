@@ -33,10 +33,10 @@
 #include "avcodec.h"
 #include "internal.h"
 
-int sent = 0;
-int to_send = 0;
-orcc265_param_t *cmd;
-AVPacket *tmp_avpkt; 
+static int sent = 0;
+static int to_send = 0;
+static orcc265_param_t *cmd;
+static AVPacket *tmp_avpkt; 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Instance
@@ -72,6 +72,7 @@ static void write_end_O() {
 
 ////////////////////////////////////////////////////////////////////////////////
 // Functions/procedures
+// we dont need this really, file/source init is taken care by ffmpeg now
 extern void source_init();
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1231,16 +1232,16 @@ static av_cold int liborcc265_decode_init(AVCodecContext *avctx)
     cmd = (orcc265_param_t*) malloc(sizeof(orcc265_param_t));
     av_log(avctx, AV_LOG_ERROR, "decoder is still being tested!\n");
 
-    //some arguments; defaults dataflow decoder. later we need a set function! 
+    //some arguments; defaults dataflow decoder. later we need to use a set function! 
     char* argv[8];
     argv[0] = "./fforcc";
     argv[1] = "-i";
-    argv[2] = "";  //input stream
+    argv[2] = avctx->dataflow_input_fname;  //input stream
     argv[3] = "-n";
     argv[4] = "-l";
     argv[5] = "1";
     argv[6] = "-c";
-    argv[7] = "4"; //ncores
+    argv[7] = avctx->dataflow_ncores; //ncores
     int argc = 8;
     cmd->argv = argv;
     cmd->argc = argc;
@@ -1248,10 +1249,9 @@ static av_cold int liborcc265_decode_init(AVCodecContext *avctx)
     opt = set_default_options();
     orcc_thread_create(q->launch_thread, orcc265_start_actors, *cmd, q->launch_thread_id);
 
-    //either we need to sleep till initilization or check by pooling.
+    //check if all dataflow components are started by pooling.
     while(opt->display_flags==NULL);
     while(displayYUV_getFlags()!=0);
-
 
     q->sink_sched_info = (schedinfo_t*) malloc(sizeof(schedinfo_t));
     (q->sink_sched_info)->num_firings = 0;
@@ -1281,13 +1281,8 @@ static int liborcc265_decode_frame(AVCodecContext *avctx, void *data, int *got_f
     q->frames_decoded = nbFrameDecoded;
     HEVCDisplay_scheduler(q->sink_sched_info);
 
-    //printf("**** inside decode_frame ***** 3 \n");
-    //printf("**** inside decode_frame ***** 4 --- %d, %d\n", nbFrameDecoded,  q->frames_decoded);
-
     if(nbFrameDecoded > q->frames_decoded){
-	 // printf("**** inside decode_frame ***** 4 --- %d, %d\n", nbFrameDecoded,  q->frames_decoded);
-         // av_log(avctx, AV_LOG_ERROR, "Packet size is %d !\n", avpkt->size);
-         // Initialize the AVFrame
+	 
          AVFrame* frame = data;
 	 frame->width  = cropPicWthLuma;
 	 frame->height = cropPicHghtLuma;
@@ -1309,22 +1304,18 @@ static int liborcc265_decode_frame(AVCodecContext *avctx, void *data, int *got_f
     avpkt->size -= sent;
     avpkt->data += sent;
 
-    // printf("**** decoded frame %d, gotframe = %d and packet size = %d and sent = %d *****\n", q->frames_decoded++, *got_frame, to_send, sent);
-    // Return the amount of bytes consumed if everything was ok
+    // Return the amount of bytes consumed if everything was ok, used for accounting by the caller
     return sent;
 }
 
 static av_cold int liborcc265_decode_end(AVCodecContext *avctx)
 {
     liborcc265Context *q = avctx->priv_data;
-    //orcc264_decoder_end(h);
     free(q->source_sched_info);
     free(q->sink_sched_info);
     free(cmd);
     untagged_0();
     orcc_thread_join(q->launch_thread);
-    //fclose(ofile);
-    //Return 0 if everything is ok, -1 if not
     return 0;
 }
 

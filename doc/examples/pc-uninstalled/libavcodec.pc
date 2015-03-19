@@ -8,5 +8,5 @@ Description: FFmpeg codec library
 Version: 56.13.100
 Requires: libswresample >= 1.1.100, libavutil >= 54.15.100
 Conflicts:
-Libs: -L${libdir} -Wl,-rpath,${libdir} -lavcodec -lva -lxcb -lxcb-shm -lxcb -lX11 -ljack -lasound -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lSDL -lpthread -L/usr/local/lib -lx265 -L/usr/local/lib -lx264 -L/usr/local/lib -lorcc264 -lorcc-runtime -lorcc-native -lroxml -lSDL -lm -lbz2 -lz -pthread -lrt
+Libs: -L${libdir} -Wl,-rpath,${libdir} -lavcodec -lva -lxcb -lxcb-shm -lxcb -lX11 -ljack -lasound -Wl,-rpath,/usr/local/lib -L/usr/local/lib -lSDL -lpthread -L/usr/local/lib -lx265 -L/usr/local/lib -lx264 -L/usr/local/lib -lorcc265 -lorcc-runtime -lorcc-native -lroxml -lSDL -L/usr/local/lib -lorcc264 -lorcc-runtime -lorcc-native -lroxml -lSDL -lm -lbz2 -lz -pthread -lrt
 Cflags: -I${includedir}
