@@ -1,0 +1,23 @@
+This doc explains how to compile and run an example of "integration of dataflow components with a transcoding framework"
+ 
+1. Clone the modified orcc compiler from https://github.com/tdeneke/orcc.git
+2. Clone the modified orcc apps (just application network naming change) from https://github.com/tdeneke/orc-apps.git    
+3. Clone the modified ffmpeg fork from https://github.com/tdeneke/ffmpeg-2.5.3.git
+4. Generate C code of the orcc apps(networks) named orcc265.xdf and orcc264.xdf using the modified compiler
+5. Compile and install both generated applications (in our case libraries)
+	- Configure: cmake .. (from build folder of the generated code)
+        - Compile: make 
+	- Instal: sudo make install 
+6. Compile and install libx264 and libx265 as ffmpeg need these as well. follow the following guides   
+	- https://trac.ffmpeg.org/wiki/CompilationGuide/Ubuntu 
+	- https://bitbucket.org/multicoreware/x265/wiki/Home
+7. Configure, compile and Install ffmpeg 
+	- Configuration: ./configure --enable-gpl --enable-liborcc264 --enable-liborcc265 --enable-libx264 --enable-libx265
+	- Copmile: make
+	- Install: sudo make install 
+8. Compile and run the example application /ffmpeg-2.5.3/doc/examples/dataflow_transcoding_test.c 
+	- Compile: make (from /ffmpeg-2.5.3/doc/examples/)
+	- Run:	(e.g. ./dataflow_transcoding_test BasketballDrive_1920x1080_50_qp27.bin test.h264 480 360 500000 4 orcc265)
+		(e.g. ./dataflow_transcoding_test BasketballDrive_1920x1080_50_qp27.h264 test.h264 480 360 500000 4 orcc264)
+		(e.g. ./dataflow_transcoding_test BasketballDrive_1920x1080_50_qp27.h264 test.h264 480 360 500000 4 h264)
+	- Usage: ./dataflow_transcoding_test <input file> <output file> <width> <height> <bitrate> <ncores> <decoder name>

@@ -74,7 +74,9 @@ static int open_input_file(const char *filename, char* ncores, char* codec_name)
             /* Open decoder */
 	    if(strcmp(codec_name,"h264") == 0){
 		codec_ctx->codec_id = AV_CODEC_ID_H264;
-	    }else if(strcmp(codec_name,"orcc264") == 0){
+	    }else if(strcmp(codec_name,"h265") == 0){
+                codec_ctx->codec_id = AV_CODEC_ID_HEVC;
+            }else if(strcmp(codec_name,"orcc264") == 0){
 		codec_ctx->codec_id = AV_CODEC_ID_ORCC264;
 	    }else if(strcmp(codec_name,"orcc265") == 0){
 		codec_ctx->codec_id = AV_CODEC_ID_ORCC265;
