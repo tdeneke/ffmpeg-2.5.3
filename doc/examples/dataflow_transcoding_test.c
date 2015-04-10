@@ -370,6 +370,7 @@ int main(int argc, char **argv)
 
             	ret = dec_func(ifmt_ctx->streams[stream_index]->codec, frame,
                     	&got_frame, &packet);
+
                 decoded = ret;
             	if (ret < 0) {
                 	av_log(NULL, AV_LOG_ERROR, "Decoding failed\n");
@@ -377,9 +378,12 @@ int main(int argc, char **argv)
             	}
 
             	if (got_frame) {
+			av_log(NULL, AV_LOG_INFO, "Before rescale\n");
                 	frame->pts = av_frame_get_best_effort_timestamp(frame);
 			ff_scale_image (scaled_frame->data, scaled_frame->linesize,width, height, AV_PIX_FMT_YUV420P, frame->data, frame->linesize, ifmt_ctx->streams[stream_index]->codec->width, ifmt_ctx->streams[stream_index]->codec->height, ifmt_ctx->streams[stream_index]->codec->pix_fmt, NULL);
-                        ret = encode_write_frame(scaled_frame, stream_index, NULL); 
+                        av_log(NULL, AV_LOG_INFO, "Before Encoding\n"); 
+                        ret = encode_write_frame(scaled_frame, stream_index, NULL);
+			av_log(NULL, AV_LOG_INFO, "After Encode\n"); 
 
                 	if (ret < 0)
                    		goto end; 
