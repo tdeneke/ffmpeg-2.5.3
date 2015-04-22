@@ -390,6 +390,7 @@
 @c @set config-libopus no
 @set config-liborcc264 yes
 @set config-liborcc265 yes
+@set config-liborccmpeg4 yes
 @c @set config-libpulse no
 @c @set config-libquvi no
 @c @set config-librtmp no
@@ -418,7 +419,7 @@
 @set config-libxcb-shm yes
 @c @set config-libxcb-shape no
 @c @set config-libxcb-xfixes no
-@c @set config-libxvid no
+@set config-libxvid yes
 @c @set config-libzmq no
 @c @set config-libzvbi no
 @c @set config-lzma no
@@ -940,6 +941,7 @@
 @c @set config-libopus-decoder no
 @set config-liborcc264-decoder yes
 @set config-liborcc265-decoder yes
+@set config-liborccmpeg4-decoder yes
 @c @set config-libschroedinger-decoder no
 @c @set config-libspeex-decoder no
 @c @set config-libstagefright-h264-decoder no
@@ -1351,7 +1353,7 @@
 @set config-libx264rgb-encoder yes
 @set config-libx265-encoder yes
 @c @set config-libxavs-encoder no
-@c @set config-libxvid-encoder no
+@set config-libxvid-encoder yes
 @c @set config-libaacplus-encoder no
 @set config-adelay-filter yes
 @set config-aecho-filter yes

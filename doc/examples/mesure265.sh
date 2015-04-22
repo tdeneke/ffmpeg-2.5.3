@@ -3,7 +3,8 @@
 ITERATIONS=5
 TIMES_FILE="times"
 CODEC=$1
-CORES=(1 2 4)
+FMT=$2
+CORES=(1 2 4 6)
 #ALGOS[0]="RR"
 #ALGOS[1]="WLB"
 #ALGOS[2]="KLR"
@@ -34,7 +35,7 @@ for res in "${RESOLUTIONS[@]}" ;do
 for core in ${CORES[@]} ;do
 for ((iter=1; iter<=$ITERATIONS; iter++)) ;do
 echo -ne "$video\t$res\t$core\t" >> $TIMES_FILE
-/usr/bin/time -o $TIMES_FILE -a -p -f '%e\t%U\t%S' ./dataflow_transcoding_test  $video.bin ${CODEC}_${video}.h264 $res $core $CODEC
+/usr/bin/time -o $TIMES_FILE -a -p -f '%e\t%U\t%S' ./dataflow_transcoding_test  $video.$FMT ${CODEC}_${video}.h264 $res $core $CODEC
 done
 done
 #done

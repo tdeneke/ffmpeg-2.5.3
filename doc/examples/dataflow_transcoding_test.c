@@ -36,6 +36,7 @@
 #include <libavfilter/buffersrc.h>
 #include <libavutil/opt.h>
 #include <libavutil/pixdesc.h>
+#include <time.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/parseutils.h>
 #include <libswscale/swscale.h>
@@ -43,6 +44,26 @@
 
 static AVFormatContext *ifmt_ctx;
 static AVFormatContext *ofmt_ctx;
+int64_t tti;
+
+static int64_t getutime(void)
+{
+#if HAVE_GETRUSAGE
+    struct rusage rusage;
+
+    getrusage(RUSAGE_SELF, &rusage);
+    return (rusage.ru_utime.tv_sec * 1000000LL) + rusage.ru_utime.tv_usec;
+#elif HAVE_GETPROCESSTIMES
+    HANDLE proc;
+    FILETIME c, e, k, u;
+    proc = GetCurrentProcess();
+    GetProcessTimes(proc, &c, &e, &k, &u);
+    return ((int64_t) u.dwHighDateTime << 32 | u.dwLowDateTime) / 10;
+#else
+    return av_gettime_relative();
+#endif
+}
+
 
 static int open_input_file(const char *filename, char* ncores, char* codec_name)
 {
@@ -76,6 +97,8 @@ static int open_input_file(const char *filename, char* ncores, char* codec_name)
 		codec_ctx->codec_id = AV_CODEC_ID_H264;
 	    }else if(strcmp(codec_name,"h265") == 0){
                 codec_ctx->codec_id = AV_CODEC_ID_HEVC;
+            }else if(strcmp(codec_name,"orccmpeg4") == 0){
+                codec_ctx->codec_id = AV_CODEC_ID_ORCCMPEG4;
             }else if(strcmp(codec_name,"orcc264") == 0){
 		codec_ctx->codec_id = AV_CODEC_ID_ORCC264;
 	    }else if(strcmp(codec_name,"orcc265") == 0){
@@ -312,6 +335,7 @@ int main(int argc, char **argv)
     char* codec_name;
     int width, height, bitrate;
     int (*dec_func)(AVCodecContext *, AVFrame *, int *, const AVPacket *);
+    int64_t ti;
 
     if (argc != 8) {
         av_log(NULL, AV_LOG_ERROR, "Usage: %s <input file> <output file> <width> <height> <bitrate> <ncores> <decoder name>\n", argv[0]);
@@ -368,8 +392,10 @@ int main(int argc, char **argv)
 	    	dec_func = (type == AVMEDIA_TYPE_VIDEO) ? avcodec_decode_video2 :
                 	avcodec_decode_audio4;
 
+                //ti = getutime();
             	ret = dec_func(ifmt_ctx->streams[stream_index]->codec, frame,
-                    	&got_frame, &packet);
+                    	&got_frame, &packet);  
+                //tti += getutime()-ti;  
 
                 decoded = ret;
             	if (ret < 0) {
@@ -378,12 +404,14 @@ int main(int argc, char **argv)
             	}
 
             	if (got_frame) {
+			ti = getutime();		
 			av_log(NULL, AV_LOG_INFO, "Before rescale\n");
                 	frame->pts = av_frame_get_best_effort_timestamp(frame);
 			ff_scale_image (scaled_frame->data, scaled_frame->linesize,width, height, AV_PIX_FMT_YUV420P, frame->data, frame->linesize, ifmt_ctx->streams[stream_index]->codec->width, ifmt_ctx->streams[stream_index]->codec->height, ifmt_ctx->streams[stream_index]->codec->pix_fmt, NULL);
                         av_log(NULL, AV_LOG_INFO, "Before Encoding\n"); 
                         ret = encode_write_frame(scaled_frame, stream_index, NULL);
-			av_log(NULL, AV_LOG_INFO, "After Encode\n"); 
+			av_log(NULL, AV_LOG_INFO, "After Encode\n");
+                        tti += getutime()-ti; 
 
                 	if (ret < 0)
                    		goto end; 
@@ -423,6 +451,8 @@ end:
         avio_close(ofmt_ctx->pb);
     avformat_free_context(ofmt_ctx);
 
+    printf("bench: utime=%0.3fs\n", tti / 1000000.0);
+    	
     if (ret < 0)
         av_log(NULL, AV_LOG_ERROR, "Error occurred: %s\n", av_err2str(ret));
 

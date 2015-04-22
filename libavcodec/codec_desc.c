@@ -221,6 +221,12 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .long_name = NULL_IF_CONFIG_SMALL("ORCC / H.265 / HEVC"),
     },
     {
+        .id        = AV_CODEC_ID_ORCCMPEG4,
+        .type      = AVMEDIA_TYPE_VIDEO,
+        .name      = "liborccmpeg4",
+        .long_name = NULL_IF_CONFIG_SMALL("ORCC / MPEG4 / PART 2 SP"),
+    },
+    {
         .id        = AV_CODEC_ID_INDEO3,
         .type      = AVMEDIA_TYPE_VIDEO,
         .name      = "indeo3",

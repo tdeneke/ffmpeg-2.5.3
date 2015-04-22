@@ -766,6 +766,7 @@ OBJS-$(CONFIG_LIBX264_ENCODER)            += libx264.o
 OBJS-$(CONFIG_LIBX265_ENCODER)            += libx265.o
 OBJS-$(CONFIG_LIBORCC264_DECODER)         += liborcc264.o
 OBJS-$(CONFIG_LIBORCC265_DECODER)         += liborcc265.o
+OBJS-$(CONFIG_LIBORCCMPEG4_DECODER)       += liborccmpeg4.o
 OBJS-$(CONFIG_LIBXAVS_ENCODER)            += libxavs.o
 OBJS-$(CONFIG_LIBXVID_ENCODER)            += libxvid.o
 OBJS-$(CONFIG_LIBZVBI_TELETEXT_DECODER)   += libzvbi-teletextdec.o

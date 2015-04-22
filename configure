@@ -228,6 +228,7 @@ External library support:
   --enable-libopus         enable Opus de/encoding via libopus [no]
   --enable-liborcc264      enable H.264 decoding via orcc264 [no]
   --enable-liborcc265      enable H.265 decoding via orcc265 [no]
+  --enable-liborccmpeg4    enable MPEG4 decoding via orccmpeg4 [no]
   --enable-libpulse        enable Pulseaudio input via libpulse [no]
   --enable-libquvi         enable quvi input via libquvi [no]
   --enable-librtmp         enable RTMP[E] support via librtmp [no]
@@ -1369,6 +1370,7 @@ EXTERNAL_LIBRARY_LIST="
     libopus
     liborcc264
     liborcc265
+    liborccmpeg4
     libpulse
     libquvi
     librtmp
@@ -2369,6 +2371,7 @@ libopus_encoder_deps="libopus"
 libopus_encoder_select="audio_frame_queue"
 liborcc264_decoder_deps="liborcc264"
 liborcc265_decoder_deps="liborcc265"
+liborcc265_decoder_deps="liborccmpeg4"
 libquvi_demuxer_deps="libquvi"
 libschroedinger_decoder_deps="libschroedinger"
 libschroedinger_encoder_deps="libschroedinger"
@@ -4346,6 +4349,7 @@ die_license_disabled gpl frei0r
 die_license_disabled gpl libcdio
 die_license_disabled gpl liborcc264
 die_license_disabled gpl liborcc265
+die_license_disabled gpl liborccmpeg4
 die_license_disabled gpl libsmbclient
 die_license_disabled gpl libutvideo
 die_license_disabled gpl libvidstab
@@ -4888,6 +4892,7 @@ enabled libopenjpeg       && { check_lib openjpeg.h opj_version -lopenmj2 -DOPJ_
 enabled libopus           && require_pkg_config opus opus_multistream.h opus_multistream_decoder_create
 enabled liborcc264        && require_pkg_config orcc264 orcc264.h orcc264_decoder_decode
 enabled liborcc265        && require_pkg_config orcc265 orcc265.h orcc265_decoder_decode
+enabled liborccmpeg4      && require_pkg_config orccmpeg4 orccmpeg4.h orccmpeg4_decoder_decode
 enabled libpulse          && require_pkg_config libpulse pulse/pulseaudio.h pa_context_new
 enabled libquvi           && require_pkg_config libquvi quvi/quvi.h quvi_init
 enabled librtmp           && require_pkg_config librtmp librtmp/rtmp.h RTMP_Socket

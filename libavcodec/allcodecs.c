@@ -514,6 +514,7 @@ void avcodec_register_all(void)
     REGISTER_ENCDEC (LIBOPUS,           libopus);
     REGISTER_DECODER(LIBORCC264,        liborcc264);
     REGISTER_DECODER(LIBORCC265,        liborcc265);
+    REGISTER_DECODER(LIBORCCMPEG4,      liborccmpeg4);
     REGISTER_ENCDEC (LIBSCHROEDINGER,   libschroedinger);
     REGISTER_ENCODER(LIBSHINE,          libshine);
     REGISTER_ENCDEC (LIBSPEEX,          libspeex);
